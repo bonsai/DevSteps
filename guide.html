@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevSteps Guide — AI時代の開発プロセス</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.8;color:#202124;background:#f7f7f5}
+body{margin:0}.wrap{max-width:920px;margin:auto;padding:48px 24px 80px}header{padding:48px 0 32px}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.15;margin:0 0 16px}h2{margin-top:56px;font-size:1.7rem}h3{margin-top:32px}p{max-width:75ch}.lead{font-size:1.2rem}.card{background:white;border:1px solid #ddd;border-radius:16px;padding:24px;margin:24px 0}.flow{display:grid;gap:8px;margin:24px 0}.step{padding:14px 18px;border:1px solid #ccc;border-radius:10px;background:#fff}.arrow{text-align:center;color:#666}pre{overflow:auto;background:#1f2328;color:#f6f8fa;padding:20px;border-radius:12px}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.role{border:1px solid #ddd;border-radius:12px;padding:16px;background:white}.tag{display:inline-block;border:1px solid #bbb;border-radius:999px;padding:2px 10px;margin:3px;font-size:.9rem}a{color:inherit}footer{margin-top:64px;color:#666;border-top:1px solid #ddd;padding-top:24px}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header>
+<p><span class="tag">DevSteps</span><span class="tag">Human Guide</span></p>
+<h1>わからない時代から、<br>決めれば進める時代へ</h1>
+<p class="lead">AI時代の開発は、「人間が一つずつ作る」から「人間が決め、AIが進み、未決定だけを共同で決める」へ変わる。</p>
+</header>
+
+<section>
+<h2>1. なぜDevStepsなのか</h2>
+<p>ウォーターフォールは、要求から設計、実装、テスト、リリースまでを順序立てて進める。最初に十分なことが決まっているなら合理的だ。</p>
+<p>一方、現実には最初からすべてはわからない。そこでアジャイルは、小さく作り、試し、結果から次を決める方法を発達させた。</p>
+<div class="card"><strong>AIはこの関係を変える。</strong><br>宣言された目的・制約・設計があれば、AIはDesign → Code → Test → Build → Deployを連続して展開できる。だから新しいボトルネックは「作業」より「決定」になる。</div>
+</section>
+
+<section>
+<h2>2. テーゼとアンチテーゼ</h2>
+<p><strong>テーゼ：</strong>決まっているなら、一気に進めればよい。AIによって工程の自動展開が可能になる。</p>
+<p><strong>アンチテーゼ：</strong>それでも全部は最初に決められない。UI、データソース、品質、方針など、実行して初めて現れる未知もある。</p>
+<p><strong>止揚：</strong>全体はWaterfall的に進め、未決定部分だけAgile的に対話する。</p>
+</section>
+
+<section>
+<h2>3. DevStepsの基本ループ</h2>
+<div class="flow">
+<div class="step"><strong>01 DECLARE</strong> — HumanがGoal・制約・既知の決定を宣言</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>02 EXPAND</strong> — AIが宣言された範囲を設計へ展開</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>03 EXECUTE</strong> — AI / WF / AW / UiPathが実行</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>04 DETECT</strong> — AIが未決定・不足Input・Bottleneckを検出</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>05 DEMAND</strong> — AIが必要な一点だけ質問</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>06 DECIDE</strong> — Human + AIで決定</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>07 UPDATE / CONTINUE</strong> — YAML / Graphを更新して再開</div>
+<div class="arrow">↓</div>
+<div class="step"><strong>08 GATE</strong> — 条件を満たせばPASS、未達ならBLOCK</div>
+</div>
+</section>
+
+<section>
+<h2>4. 誰が何をするのか</h2>
+<div class="roles">
+<div class="role"><h3>Human</h3><p><strong>決定者</strong><br>Goal、制約、価値判断、未決定事項、Gate承認を決める。</p></div>
+<div class="role"><h3>AI</h3><p><strong>計画・実行者</strong><br>宣言された範囲を設計・実装・検証し、未決定だけDemandする。</p></div>
+<div class="role"><h3>AW</h3><p><strong>オーケストレータ</strong><br>Repo、Graph、Agent、WFを接続して進行させる。</p></div>
+<div class="role"><h3>UiPath</h3><p><strong>GUI実行者</strong><br>APIやCLIで扱えないBrowser / Desktop / GUIを担当する。</p></div>
+<div class="role"><h3>WF</h3><p><strong>決定論的実行者</strong><br>Test / Build / Deploy / 定期処理を再現可能に実行する。</p></div>
+<div class="role"><h3>GitHub</h3><p><strong>記録媒体</strong><br>設計・判断・実装・自動化・成果をSource of Recordとして保持する。</p></div>
+</div>
+</section>
+
+<section>
+<h2>5. AIはどこで止まるのか</h2>
+<div class="card">
+<p>AIは「できないから止まる」のではなく、<strong>決めてはいけない場所に到達したら止まる。</strong></p>
+<ul>
+<li>Goalが未定義</li><li>必須制約が未定義</li><li>Product / UX / Businessの価値判断が未決定</li><li>Policy変更が必要</li><li>実行Inputが不足</li><li>Bottleneck解消にHuman判断が必要</li><li>Gateの承認が必要</li>
+</ul>
+</div>
+<p>ただし、停止点より前の独立した宣言済み範囲は可能な限り進める。</p>
+</section>
+
+<section>
+<h2>6. Demand / Decision / Gate</h2>
+<p><strong>Demand</strong>は「次に人間から必要な入力」。<strong>Decision</strong>は、そのDemandに対する決定。<strong>Gate</strong>は、次の工程へ進んでよいかを判定する関門。</p>
+<pre><code>demand:
+  id: demand-test-method
+  from: test-gate
+  target: decision-test
+  type: bottleneck
+  question: "テスト方法を決めてください"
+  options:
+    - github-actions
+    - local
+    - both</code></pre>
+<p>AIはOptionを最大3つまで整理できる。しかし、人間の価値判断を勝手に確定しない。</p>
+</section>
+
+<section>
+<h2>7. Graphは進捗表ではなく設計そのもの</h2>
+<p>DevStepsではNodeとEdgeがプロセスの状態を表す。</p>
+<div class="card">
+<p><strong>Node</strong> = Goal / Decision / Phase / Task / Gate / Automation / Demand</p>
+<p><strong>Edge</strong> = demand / answer / result / pass / block / depends_on</p>
+<p><strong>Owner</strong> = 誰が担当するか</p>
+<p><strong>Scope</strong> = どこまで実行してよいか</p>
+<p><strong>Gate</strong> = 次工程へ進む条件</p>
+</div>
+<p>Graphは単なる可視化ではない。Block同士がDemand・Answer・Resultを交換することで設計が前進する。</p>
+</section>
+
+<section>
+<h2>8. YAMLが正本</h2>
+<p>YAMLはSingle Source of Truth。YAMLのBlockをReact Nodeへ1:1、YAMLのEdgeをReact Edgeへ1:1で変換する。GUI専用の別データモデルは作らない。</p>
+<pre><code>Goal
+  ↓ demand
+Decision
+  ↓ answer
+Phase
+  ↓ demand
+Task
+  ↓ result
+Gate
+  ↓ pass
+Next Phase</code></pre>
+</section>
+
+<section>
+<h2>9. 開発の中心が変わる</h2>
+<p>AIによってコードを書く価値がなくなるのではない。開発の中心が、コードそのものから<strong>「何が決まっていて、何が決まっていないか」</strong>へ移る。</p>
+<p>したがって進捗も、実装量だけでなくDecision、Undecided、Blocked、Bottleneckで見る。</p>
+<pre><code>Progress   72%
+Decisions   8
+Undecided   2
+Blocked     1
+Bottlenecks 1</code></pre>
+</section>
+
+<section>
+<h2>10. 一言でいうと</h2>
+<div class="card"><h3>AIは勝手に決めない。</h3><p>しかし、<strong>決まったことは遠慮なく進める。</strong></p></div>
+<p>人間はすべてを逐次指示する必要がない。AIは未決定事項を発見し、必要なときだけHumanへDemandを返す。回答された瞬間に、また先へ進む。</p>
+</section>
+
+<footer>
+<p>DevSteps Human Guide · Human向け説明書。Agentの実行規約は <a href="AGENT.md">AGENT.md</a> を参照。設計判断・ADRはGitHub Issuesに記録する。</p>
+</footer>
+</main>
+</body>
+</html>
