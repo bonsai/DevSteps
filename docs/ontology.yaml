@@ -1,0 +1,144 @@
+version: "2.1"
+name: DevSteps
+purpose: "Block同士のやり取りで設計を前進させるGitHub中心のProject/Agent ontology"
+
+principle: "決まっている部分はAIが通し、未決定部分だけHuman + AIで共同で決める"
+
+actors:
+  human:
+    role: decision_owner
+    responsibility: "目的・制約・価値判断・未決定事項・Gate承認を決める"
+  ai:
+    role: planner_executor
+    responsibility: "宣言された設計を展開・実装・検証し、未決定だけをDemandする"
+  aw:
+    role: orchestrator
+    responsibility: "Repository / Graph / Workflow / Agentを接続し進行させる"
+  uipath:
+    role: gui_executor
+    responsibility: "API / CLIで扱えない外部GUI操作を実行する"
+  wf:
+    role: deterministic_executor
+    responsibility: "Test / Build / Deploy等の再現可能な処理を実行する"
+  github:
+    role: source_of_record
+    responsibility: "README / Issues / Code / WFを記録として保持する"
+
+boundaries:
+  human_decides:
+    - goal
+    - constraints
+    - policy
+    - unresolved_decisions
+    - gate_approval
+  ai_decides:
+    - "既に宣言された範囲内の機械的判断"
+  ai_must_not_decide:
+    - user_value_judgement
+    - unresolved_product_decision
+    - policy_change
+  ai_executes:
+    - design_expansion
+    - implementation
+    - test
+    - build
+    - deploy
+    - analysis
+  uipath_executes:
+    - browser
+    - desktop
+    - gui
+  wf_executes:
+    - test
+    - build
+    - deploy
+    - scheduled_jobs
+
+blocks:
+  goal: {type: goal, purpose: "PJの目的"}
+  decision: {type: decision, purpose: "人間が決める事項"}
+  phase: {type: phase, purpose: "工程"}
+  task: {type: task, purpose: "実行項目"}
+  gate: {type: gate, purpose: "次工程へ進む判断関門"}
+  automation: {type: automation, purpose: "自動実行"}
+  demand: {type: demand, purpose: "次に必要な入力"}
+
+status:
+  todo: "未着手"
+  doing: "進行中"
+  done: "完了"
+  blocked: "停止"
+
+gate_status:
+  open: "判定待ち"
+  passed: "通過"
+  failed: "不通過"
+  waiting: "入力待ち"
+
+edge_messages:
+  demand: "次に必要な入力を要求"
+  answer: "人間の回答を渡す"
+  result: "実行結果を渡す"
+  pass: "Gate通過を渡す"
+  block: "停止理由を渡す"
+  depends_on: "依存関係を渡す"
+
+block_contract:
+  required: [id, type, status]
+  optional: [input, output, demand, options, result, owner, scope, gate]
+  identity: "YAML Block = React Node 1:1"
+
+edge_contract:
+  format: "[from, to, message]"
+  identity: "YAML Edge = React Edge 1:1"
+
+process:
+  name: declarative-development
+  stages:
+    - {id: declare, owner: human, output: declarative_spec}
+    - {id: expand, owner: ai, output: implementation_plan}
+    - {id: execute, owner: ai, output: result}
+    - {id: detect, owner: ai, output: demand}
+    - {id: decide, owner: human_ai, output: answer}
+    - {id: update, owner: ai, output: updated_spec}
+    - {id: continue, owner: ai, output: next_result}
+    - {id: gate, owner: human_or_policy, output: gate_status}
+  rule: "既知部分はWaterfall的に連続実行し、未知部分だけAgile的に対話する"
+
+exchange:
+  loop:
+    - inspect_block
+    - inspect_edges
+    - execute_declared_scope
+    - detect_missing_input
+    - detect_bottleneck
+    - create_demand
+    - ask_human
+    - receive_answer
+    - update_block
+    - continue
+    - gate
+  constraints:
+    mechanically_ask: true
+    solve_problem: false
+    decide_for_user: false
+    execute_within_declared_scope: true
+    max_options: 3
+
+stats:
+  progress: "0-100"
+  phases_total: "count(type=phase)"
+  phases_done: "count(type=phase,status=done)"
+  gates_total: "count(type=gate)"
+  gates_passed: "count(type=gate,status=passed)"
+  blocked: "count(status=blocked)"
+  bottlenecks: "count(demand.type=bottleneck)"
+  decisions_pending: "count(type=decision,status!=done)"
+
+repository:
+  readme: "目次 / entry point"
+  agent: "Agent instructions / execution contract"
+  guide: "Human explanation"
+  issues: "Design / ADR / Decision Record"
+  code: "Implementation / Output"
+  workflows: "Test / Build / Deploy / Automation"
