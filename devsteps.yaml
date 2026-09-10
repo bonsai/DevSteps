@@ -1,0 +1,13 @@
+project:
+  goal: "GitHub PJを設計・実装・検証・公開まで進める"
+nodes:
+  goal: {type: goal, status: done, label: Goal, x: 80, y: 180}
+  decision: {type: decision, status: doing, label: Decision, x: 260, y: 180, demand: "公開方法を決めてください", options: [Pages, Vercel, Cloudflare]}
+  phase: {type: phase, status: todo, label: Phase, x: 440, y: 180}
+  task: {type: task, status: todo, label: Task, x: 620, y: 180}
+  gate: {type: gate, status: waiting, label: Gate, x: 800, y: 180}
+edges:
+  - [goal, decision, demand]
+  - [decision, phase, answer]
+  - [phase, task, demand]
+  - [task, gate, result]
